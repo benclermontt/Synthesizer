@@ -33,10 +33,6 @@ def random_seed(x):
     np.random.seed(x)
 
 
-class UnimplementedMethodException(Exception):
-    """Exception if someone calls a method that should be overridden."""
-
-
 class WavFileWriter:
     """Writes wav files."""
 
@@ -828,17 +824,6 @@ class Wave:
         """
         return quantize(self.ys, bound, dtype)
 
-    def apodize(self, denom=20, duration=0.1):
-        """Tapers the amplitude at the beginning and end of the signal.
-
-        Tapers either the given duration of time or the given
-        fraction of the total duration, whichever is less.
-
-        denom: float fraction of the segment to taper
-        duration: float duration of the taper in seconds
-        """
-        self.ys = apodize(self.ys, self.framerate, denom, duration)
-
     def hamming(self):
         """Apply a Hamming window to the wave.
         """
@@ -1252,21 +1237,6 @@ class Signal:
         ts = start + np.arange(n) / framerate
         ys = self.evaluate(ts)
         return Wave(ys, ts, framerate=framerate)
-
-
-def infer_framerate(ts):
-    """Given ts, find the framerate.
-
-    Assumes that the ts are equally spaced.
-
-    ts: sequence of times in seconds
-
-    returns: frames per second
-    """
-    # TODO: confirm that this is never used and remove it
-    dt = ts[1] - ts[0]
-    framerate = 1.0 / dt
-    return framerate
 
 
 class SumSignal(Signal):
