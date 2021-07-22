@@ -1162,9 +1162,9 @@ def quantize(ys, bound, dtype):
 
     returns: quantized signal
     """
-    if max(ys) > 1 or min(ys) < -1:
-        warnings.warn("Warning: normalizing before quantizing.")
-        ys = normalize(ys)
+    # if max(ys) > 1 or min(ys) < -1:
+    #     warnings.warn("Warning: normalizing before quantizing.")
+    #     ys = normalize(ys)
 
     zs = (ys * bound).astype(dtype)
     return zs

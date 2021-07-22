@@ -1,4 +1,7 @@
 import random
+import wave
+
+import ffmpeg
 import thinkdsp
 from pydub import AudioSegment
 from pydub.playback import play
@@ -37,13 +40,13 @@ fourier_coefficients = {
 }
 
 
-def create_note(note_name='A4', type='sine', amp=0.5, beats=1.0, filter=None, cutoff=None, filename='defaultFilename'):
+def create_note(note_name='A4', type='sine', amp=0.5, beats=1.0, filter=None, cutoff=None, filename='defaultFilename.wav'):
     frequency = note_freqs[note_name]
-    duration = beats/2
+    duration = beats / 2
     signal = thinkdsp.SinSignal(freq=0)
 
     for i in range(0, 8):
-        signal += thinkdsp.SinSignal(freq=frequency*i, amp=amp*fourier_coefficients[type][i], offset=0)
+        signal += thinkdsp.SinSignal(freq=frequency * i, amp=amp * fourier_coefficients[type][i], offset=0)
 
     wave = signal.make_wave(duration=duration, start=0, framerate=44100)
     wave.write(filename=filename)
@@ -55,5 +58,55 @@ def create_note(note_name='A4', type='sine', amp=0.5, beats=1.0, filter=None, cu
         audio = audio.low_pass_filter(cutoff)
     if filter == 'highPass':
         audio = audio.high_pass_filter(cutoff)
+    return audio
 
 
+# Sample note; Writes the notes resulting wav to the specified file
+trumpet = create_note(note_name='A4', type='trumpet', amp=1.0, beats=4.0, filter=None, cutoff=None,
+                      filename='wav files/testtt.wav')
+
+
+def create_space(track, attack=100, release=100):
+    for i in range(0, len(track) - 1):
+        if track[i][0:2] == track[i + 1][0:2]:
+            track[i] = track[i].fade_out(duration=release)
+
+
+def mix2tracks(track1, track2):
+    create_space(track1, attack=50, release=50)
+    create_space(track2, attack=50, release=50)
+    song = AudioSegment.empty()
+    for i in range(len(track1)):
+        note1 = track1[i]
+        note2 = track2[i]
+        song += note1[:len(note1)].overlay(note2[:len(note2)])
+    return song
+
+
+G3_long = create_note('G3', 'sine', beats=2.0)
+C4 = create_note('C4', 'sine')
+D4 = create_note('D4', 'sine')
+D4_long = create_note('D4', 'sine', beats=2.0)
+Eb4 = create_note('Eb4', 'sine')
+E4 = create_note('E4', 'sine')
+F4_long = create_note('F4', 'sine', beats=2.0)
+Gb4 = create_note('Gb4', 'sine')
+Gb4_long = create_note('Gb4', 'sine', beats=2.0)
+G4 = create_note('G4', 'sine')
+G4_long = create_note('Gb4', 'sine', beats=2.0)
+Ab4 = create_note('Ab4', 'sine')
+A4 = create_note('A4', 'sine')
+A4_long = create_note('A4', 'sine', beats=2.0)
+B4 = create_note('B4', 'sine')
+B4_long = create_note('B4', 'sine', beats=2.0)
+C5 = create_note('C4', 'sine')
+D5 = create_note('D5', 'sine')
+D5_long = create_note('D5', 'sine', beats=2.0)
+G5_long = create_note('G5', 'sine')
+
+track1 = [B4, B4, B4_long, B4, B4, B4_long, B4, D5, G4, A4, B4_long]
+track2 = [G4, B4, D4_long, G4, B4, D4_long, G4, D5, D4, Gb4, B4_long]
+
+song = mix2tracks(track1, track2)
+print(type(song))
+song.export('testArray.wav', format='wav')
