@@ -42,7 +42,7 @@ fourier_coefficients = {
 
 def create_note(note_name='A4', type='sine', amp=0.5, beats=1.0, filter=None, cutoff=None, filename='defaultFilename.wav'):
     frequency = note_freqs[note_name]
-    duration = beats / 4
+    duration = beats / 2
     signal = thinkdsp.SinSignal(freq=0)
 
     for i in range(0, 8):
@@ -102,7 +102,7 @@ E4 = create_note('E4', 'sine')
 E4_long = create_note('E4', 'sine', beats=2.0)
 F4_long = create_note('F4', 'sine', beats=2.0)
 Gb4 = create_note('Gb4', 'sine')
-Gb4_long = create_note('Gb4', 'sine', beats=2.0)
+Gb4_medium = create_note('Gb4', 'sine', beats=2.0)
 G4 = create_note('G4', 'sine')
 G4_long = create_note('Gb4', 'sine', beats=2.0)
 Ab4 = create_note('Ab4', 'sine')
@@ -120,7 +120,7 @@ track1 = [B4, B4, B4_long, B4, B4, B4_long, B4, D5, G4, A4, B4_long, B4_long,
           B4, B4, B4_long, B4, B4, B4_long, B4, D5, G4, A4, B4_long, B4_long,
           C5, C5, C5, C5, C5, B4, B4, B4, D5, D5, C5, A4, G4_long, G5_long]
 track2 = [G4, B4, D4_long, G4, B4, D4_long, G4, D5, D4, Gb4, G4_long, F4_long,
-          E4, G4, Eb4, G4, D4, G4, E4, Ab4, A4, E4, C4, E4, D4_long, Gb4_long,
+          E4, G4, Eb4, G4, D4, G4, E4, Ab4, A4, E4, C4, E4, D4_long, Gb4_medium,
           G4, B4, D4_long, G4, B4, D4_long, G4, B4, D4, Gb4, G4_long, F4_long,
           E4, G4, Eb4, G4, D4, G4, E4, Ab4, A4, E4, D4, Gb4, G4_long, G3_long]
 
@@ -132,20 +132,32 @@ A3_long = create_note('A3', 'trumpet', beats=2.0)
 B3_long = create_note('B3', 'trumpet', beats=2.0)
 D3_long = create_note('D3', 'trumpet', beats=2.0)
 Db3_long = create_note('D3', 'trumpet', beats=2.0)
+Db4_short = create_note('Db4', 'trumpet', beats=0.25)
+Db4 = create_note('Db4', 'trumpet', beats=0.5)
 D4 = create_note('D4', 'trumpet', beats=0.5)
+D4_long = create_note('D4', 'trumpet', beats=2.0)
+E4_short = create_note('E4', 'trumpet', beats=0.5)
 E4 = create_note('E4', 'trumpet', beats=0.5)
+E4_medium = create_note('E4', 'trumpet', beats=1.0)
 E4_long = create_note('E4', 'trumpet', beats=3.0)
 Gb4 = create_note('Gb4', 'trumpet', beats=0.5)
-Gb4_long = create_note('Gb4', 'trumpet', beats=1.0)
+Gb4_short = create_note('Gb4', 'trumpet', beats=0.25)
+Gb4_medium = create_note('Gb4', 'trumpet', beats=1.0)
 G4_long = create_note('G4', 'trumpet', beats=1.5)
 D4_Gb4_chord = create_chord(['D4', 'Gb4'], 'trumpet', amp=0.25, beats=1.0)
+E4_Db4_chord = create_chord(['Db4', 'E4'], 'trumpet', beats=0.5)
+E4_A4_chord = create_chord(['A4', 'E4'], 'trumpet', beats=1.0)
+B4_Gb4_chord = create_chord(['B4', 'Gb4'], 'trumpet', beats=0.25)
+Db4_E4_chord_short = create_chord(['Db4', 'E4'], 'trumpet', beats=0.5)
 
-track1 = [D4, E4, Gb4_long, D4_Gb4_chord, D4_Gb4_chord, D4, E4, Gb4_long, D4_Gb4_chord, D4_Gb4_chord,
-          D4, E4, Gb4_long, D4_Gb4_chord, G4_long, Gb4, E4_long]
-track2 = [D4, E4, Gb4_long, Gb4_long, Gb4_long, D4, E4, Gb4, Gb4_long]
+track1 = [D4, E4, Gb4_medium, D4_Gb4_chord, D4_Gb4_chord, D4, E4, Gb4_medium, D4_Gb4_chord, D4_Gb4_chord,
+          D4, E4, Gb4_medium, D4_Gb4_chord, G4_long, Gb4, E4_long,
+          Db4, D4, E4_medium, E4_Db4_chord, E4_Db4_chord, Db4, D4, E4_medium, E4_Db4_chord, E4_Db4_chord,
+          Db4, D4, E4_A4_chord, E4_Db4_chord, B4_Gb4_chord, E4_short, Db4_short, Gb4_short, D4_long]
+
 #track2 = [D4, E4, D3_long, Db3_long, B3_long, A3_long, D3_long, A3_long, B3_long, A3_long]
 
-song = song = AudioSegment.empty()
+song = AudioSegment.empty()
 for i in range(len(track1)):
     note1 = track1[i]
     song += note1[:len(note1)]
